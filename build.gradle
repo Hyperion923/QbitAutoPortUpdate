@@ -53,7 +53,7 @@ tasks.named('test') {
 }
 
 tasks.named('bootJar') {
-    archiveBaseName.set('qbit-auto-port-update')
+    archiveBaseName.set('qbitautoportupdate')
 }
 
 jib {
@@ -61,7 +61,7 @@ jib {
         image = 'eclipse-temurin:17-jre-alpine'
     }
     to {
-        image = "docker.io/${System.getenv('DOCKERHUB_USERNAME')}/qbit-auto-port-update:${version}"
+        image = "docker.io/${System.getenv('DOCKERHUB_USERNAME')}/qbitautoportupdate:${version}"
         auth {
             username = System.getenv('DOCKERHUB_USERNAME')
             password = System.getenv('DOCKERHUB_TOKEN')
