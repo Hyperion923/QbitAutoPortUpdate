@@ -31,7 +31,8 @@ public class CommunicationService {
 
 
     public CommunicationService(
-            @Value("${api.base-url}") String baseUrl, ObjectMapper objectMapper,
+            @Value("${api.base-url}") String baseUrl,
+            ObjectMapper objectMapper,
             @Value("${api.username:admin}") String defaultUsername,
             @Value("${api.password:}") String defaultPassword
     ) {
