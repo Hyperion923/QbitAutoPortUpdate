@@ -1,0 +1,64 @@
+package dev.hyperionsystems.qbitautoportupdate.model;
+
+import lombok.Value;
+
+@Value
+public class Torrent {
+    long addedOn;
+    long amountLeft;
+    boolean autoTmm;
+    int availability;
+    String category;
+    String comment;
+    long completed;
+    long completionOn;
+    String contentPath;
+    long dlLimit;
+    long dlspeed;
+    String downloadPath;
+    long downloaded;
+    long downloadedSession;
+    long eta;
+    boolean flPiecePrio;
+    boolean forceStart;
+    boolean hasMetadata;
+    String hash;
+    int inactiveSeeedingTimeLimit;
+    String infohashV1;
+    String infohashV2;
+    long lastActivity;
+    String magnetUri;
+    int maxInactiveSeeedingTime;
+    int maxRatio;
+    int maxSeedingTime;
+    String name;
+    int numComplete;
+    int numIncomplete;
+    int numLeechs;
+    int numSeeds;
+    int popularity;
+    int priority;
+    boolean isPrivate;
+    double progress;
+    double ratio;
+    int ratioLimit;
+    int reannounce;
+    String rootPath;
+    String savePath;
+    long seedingTime;
+    int seedingTimeLimit;
+    long seenComplete;
+    boolean seqDl;
+    long size;
+    String state;
+    boolean superSeeding;
+    String tags;
+    long timeActive;
+    long totalSize;
+    String tracker;
+    int trackersCount;
+    long upLimit;
+    long uploaded;
+    long uploadedSession;
+    long upspeed;
+}
