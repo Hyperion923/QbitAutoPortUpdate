@@ -6,6 +6,7 @@ import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,6 +22,7 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 @Configuration
 @Slf4j
+@ConditionalOnProperty(prefix = "watchdog", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class DirectoryWatchdog {
     private final Path directory;
     private final String filename;
