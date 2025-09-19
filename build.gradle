@@ -56,28 +56,20 @@ tasks.named('bootJar') {
     archiveBaseName.set('qbit-auto-port-update')
 }
 
-tasks.named('bootBuildImage') {
-    imageName = "qbit-auto-port-update:${version}"
-    environment = [
-            'BP_JVM_VERSION': '17',
-            'BP_DISABLE_SBOM': 'true'
-    ]
-}
-
 jib {
     from {
         image = 'eclipse-temurin:17-jre-alpine'
     }
     to {
-        image = "docker.io/${System.getenv('DOCKERHUB_USERNAME')}/qbitautoportupdate${version}"
+        image = "docker.io/${System.getenv('DOCKERHUB_USERNAME')}/qbit-auto-port-update:${version}"
         auth {
             username = System.getenv('DOCKERHUB_USERNAME')
             password = System.getenv('DOCKERHUB_TOKEN')
         }
         tags = ['latest']
     }
-    container(({
+    container {
         mainClass = 'dev.hyperionsystems.qbitautoportupdate.QbitAutoPortUpdateApplication'
         jvmFlags = ['-Dspring.shell.interactive.enabled=false']
-    } as Class<Object>))
+    }
 }
