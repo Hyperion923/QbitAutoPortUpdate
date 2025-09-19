@@ -55,7 +55,6 @@ tasks.named('bootJar') {
     archiveBaseName.set('qbitautoportupdate')
 }
 
-def isRelease = providers.gradleProperty('release').map { it.toBoolean() }.orElse(false).get()
 def dockerUser = System.getenv('DOCKERHUB_USERNAME')
 def dockerPass = System.getenv('DOCKERHUB_TOKEN')
 def dockerRepo = project.findProperty('dockerRepo') ?: System.getenv('DOCKER_REPO')
@@ -65,7 +64,7 @@ jib {
         image = 'eclipse-temurin:17-jre-alpine'
     }
     to {
-        def targetImage = dockerRepo ? "${dockerRepo}/qbitautoportupdate:${version}" : (dockerUser ? "docker.io/${dockerUser}/qbit-auto-port-update:${version}" : "qbit-auto-port-update:${version}")
+        def targetImage = dockerRepo ? "${dockerRepo}/qbitautoportupdate:${version}" : (dockerUser ? "docker.io/${dockerUser}/qbitautoportupdate:${version}" : "qbitautoportupdate:${version}")
         image = targetImage
         if (dockerUser && dockerPass) {
             auth {
