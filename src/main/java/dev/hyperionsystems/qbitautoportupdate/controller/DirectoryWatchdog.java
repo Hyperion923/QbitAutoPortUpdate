@@ -37,7 +37,6 @@ public class DirectoryWatchdog {
         this.directory = Paths.get(watchPath);
         this.filename = filename;
         this.communicationService = communicationService;
-        this.onModified(directory.resolve(filename));
     }
 
     @Bean
@@ -46,6 +45,17 @@ public class DirectoryWatchdog {
             try {
                 watchService = directory.getFileSystem().newWatchService();
                 directory.register(watchService, ENTRY_MODIFY, ENTRY_CREATE, ENTRY_DELETE);
+                Path initialFile = directory.resolve(filename);
+                if (Files.exists(initialFile) && Files.isRegularFile(initialFile)) {
+                    try {
+                        onModified(initialFile);
+                    } catch (Exception ex) {
+                        log.warn("Initial processing failed for {}: {}", initialFile, ex.getMessage());
+                    }
+                } else {
+                    log.info("Initial file {} does not exist, skipping initial read", initialFile);
+                }
+
             } catch (IOException e) {
                 throw new IllegalStateException("Could not register watch service", e);
             }
