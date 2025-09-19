@@ -54,20 +54,37 @@ tasks.named('bootJar') {
     archiveBaseName.set('qbitautoportupdate')
 }
 
-jib {
-    from {
-        image = 'eclipse-temurin:17-jre-alpine'
-    }
-    to {
-        image = "docker.io/${System.getenv('DOCKERHUB_USERNAME')}/qbitautoportupdate:${version}"
-        auth {
-            username = System.getenv('DOCKERHUB_USERNAME')
-            password = System.getenv('DOCKERHUB_TOKEN')
+def isRelease = providers.gradleProperty('release').map { it.toBoolean() }.orElse(false).get()
+def dockerUser = System.getenv('DOCKERHUB_USERNAME')
+def dockerPass = System.getenv('DOCKERHUB_TOKEN')
+def dockerRepo = project.findProperty('dockerRepo') ?: System.getenv('DOCKER_REPO')
+
+if (isRelease) {
+    jib {
+        from {
+            image = 'eclipse-temurin:17-jre-alpine'
         }
-        tags = ['latest']
+        to {
+            def targetImage = dockerRepo ? "${dockerRepo}/qbitautoportupdate:${version}" : (dockerUser ? "docker.io/${dockerUser}/qbit-auto-port-update:${version}" : "qbit-auto-port-update:${version}")
+            image = targetImage
+            if (dockerUser && dockerPass) {
+                auth {
+                    username = dockerUser
+                    password = dockerPass
+                }
+            }
+            tags = ['latest']
+        }
+        container {
+            mainClass = 'dev.hyperionsystems.qbitautoportupdate.QbitAutoPortUpdateApplication'
+            jvmFlags = ['-Dspring.shell.interactive.enabled=false']
+        }
     }
-    container {
-        mainClass = 'dev.hyperionsystems.qbitautoportupdate.QbitAutoPortUpdateApplication'
-        jvmFlags = ['-Dspring.shell.interactive.enabled=false']
-    }
+    tasks.named('jib').configure { enabled = true }
+} else {
+    tasks.named('jib').configure { enabled = false }
+}
+
+tasks.register('releaseImage') {
+    dependsOn 'jib'
 }
