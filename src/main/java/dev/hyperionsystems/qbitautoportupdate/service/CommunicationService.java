@@ -3,6 +3,7 @@ package dev.hyperionsystems.qbitautoportupdate.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.hyperionsystems.qbitautoportupdate.model.Preferences;
 import dev.hyperionsystems.qbitautoportupdate.model.Torrent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
+@Slf4j
 public class CommunicationService {
 
     private final HttpClient client;
@@ -51,12 +54,20 @@ public class CommunicationService {
         this.login();
         Preferences preferences = this.getPreferences();
         if (preferences.getListenPort() == port) {
+            log.info("Port {} is already set", port);
             return;
         }
         this.setPort(port);
+        log.info("Port {} set", port);
         ArrayList<Torrent> torrents = this.getActiveTorrents();
         this.toggleTorrents(torrents, "stop");
+        log.info("Stopping {} torrents", torrents.size());
+        try{
+            TimeUnit.SECONDS.sleep(3);
+        }catch (InterruptedException ignore){}
+        log.info("Starting {} torrents", torrents.size());
         this.toggleTorrents(torrents, "start");
+        log.info("Process finished");
     }
 
     public void login() {
