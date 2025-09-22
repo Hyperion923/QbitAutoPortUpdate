@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'dev.hyperion-systems'
-version = (project.findProperty("version") ?: "0.0.1").toString()
+version = (project.findProperty("version") ?: "0.0.2").toString()
 description = 'QbitAutoPortUpdate'
 
 java {
